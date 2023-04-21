@@ -99,7 +99,7 @@ def get_account_stats(membership_id, membership_type):
 
 if __name__ == "__main__":
 
-    memberships = get_user_memberships("Moira", 4231)
+    memberships = get_user_memberships("Spectre_561", 5179)
     steam_membership = next(item for item in memberships if item["type"] == 3)
     account_stats = get_account_stats(steam_membership["id"], steam_membership["type"])
     
