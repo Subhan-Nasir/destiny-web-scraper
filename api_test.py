@@ -58,10 +58,8 @@ def get_user_profiles(username, bungie_num=False):
     
     if bungie_num:
         filtered_results = next(item for item in response["Response"]["searchResults"] if item["bungieGlobalDisplayNameCode"] == bungie_num)
-        print("-"*150)
-        print("FILTERED RESULTS")
-        pprint(filtered_results)
-        print("-"*150)
+        response["Response"]["searchResults"] = [filtered_results]
+
 
     print("-"*150)
     print("API RESPONSE:")
@@ -75,9 +73,6 @@ def get_user_memberships(username, bungie_num= False):
     memberships = []
     api_response = get_user_profiles(username, bungie_num)
     # pprint(api_response)
-    
-
-
 
     for item in api_response["Response"]["searchResults"][0]["destinyMemberships"]:
         id = item["membershipId"]
@@ -96,17 +91,60 @@ def get_account_stats(membership_id, membership_type):
     return response
     
 
+def get_clan_members(roster = 1):
+    clan_id = 1903302 # Lord of fallen light
+    if(roster == 2):
+        clan_id == 4312074 # Lord of rising darkness
+    
+
+    endpoint = f"GroupV2/{clan_id}/Members"
+    url = base_url + endpoint
+    payload = ""
+
+    response = requests.request("GET", url, headers=headers, data=payload).json()
+    pprint(response)
+    
+   
+    clan_members = []
+    for item in response["Response"]["results"]:
+
+        destiny_info = item["destinyUserInfo"]
+
+        bungie_name = destiny_info["bungieGlobalDisplayName"]
+        bungie_num = destiny_info["bungieGlobalDisplayNameCode"]
+
+        membership_id = destiny_info["membershipId"]
+        membership_type = destiny_info["membershipType"]
+
+        clan_members.append({
+            "bungie_name": bungie_name,
+            "bungie_num": bungie_num,
+            "membership": {
+                "membership_id": membership_id,
+                "membership_type": membership_type
+            }
+        })
+
+    with open('clan_members.json', 'w', encoding='utf-8') as f:
+        json.dump(clan_members, f, ensure_ascii=False, indent=4)
+
+    return clan_members
+
 
 if __name__ == "__main__":
 
-    memberships = get_user_memberships("Spectre_561", 5179)
-    steam_membership = next(item for item in memberships if item["type"] == 3)
-    account_stats = get_account_stats(steam_membership["id"], steam_membership["type"])
+    # memberships = get_user_memberships("Spectre_561", 5179)
+    # steam_membership = next(item for item in memberships if item["type"] == 3)
+    # account_stats = get_account_stats(steam_membership["id"], steam_membership["type"])
     
     
 
-    with open('account_stats.json', 'w', encoding='utf-8') as f:
-        json.dump(account_stats, f, ensure_ascii=False, indent=4)
+    # with open('account_stats.json', 'w', encoding='utf-8') as f:
+    #     json.dump(account_stats, f, ensure_ascii=False, indent=4)
+
+    get_clan_members()
+
+
 
     end = time.time()
     print(f"RUNTIME = {round(end-start, 2)}seconds")

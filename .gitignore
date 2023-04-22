@@ -131,3 +131,4 @@ dmypy.json
 .pyre/
 
 acount_stats.json
+clan_members.json
