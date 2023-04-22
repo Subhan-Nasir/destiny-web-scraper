@@ -153,22 +153,23 @@ def get_clan_members(roster = 1):
     with open('clan_members.json', 'w', encoding='utf-8') as f:
         json.dump(clan_members, f, ensure_ascii=False, indent=4)
 
-    return clan_members
+    
 
 
 
 
 if __name__ == "__main__":
 
+    # Writes a player's account stats to a json file (Steam players only) 
     # memberships = get_user_memberships("Spectre_561", 5179)
     # steam_membership = next(item for item in memberships if item["type"] == 3)
     # account_stats = get_account_stats(steam_membership["id"], steam_membership["type"])
-    
-    
 
     # with open('account_stats.json', 'w', encoding='utf-8') as f:
     #     json.dump(account_stats, f, ensure_ascii=False, indent=4)
 
+
+    # Writes a list of clan members of "Lord of Fallen Light" to a json file.
     get_clan_members()
 
 
