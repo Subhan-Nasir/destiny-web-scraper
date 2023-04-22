@@ -32,6 +32,31 @@ headers = {
     "x-api-key": os.getenv("x-api-key")
 }
 
+def write_json_file(file_name, data):
+    with open(file_name, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+def read_json_file(file_name):
+    with open(file_name, "r") as f:
+        data = json.load(f)
+    
+    return data
+
+
+def get_platform(membership_type):
+    memberships_dict = {
+        1: "Xbox",
+        2: "Playstation",
+        3: "Steam",
+        4: "Blizzard",
+        5: "Stadia",
+        6: "Epic Games Store",
+        10: "TigerDemon",
+        254: "BungieNext",
+        -1: "All"
+    }
+
+    return memberships_dict[membership_type]
 
 def get_linked_profiles():
     membership_type = os.getenv("membership_type")
@@ -61,10 +86,10 @@ def get_user_profiles(username, bungie_num=False):
         response["Response"]["searchResults"] = [filtered_results]
 
 
-    print("-"*150)
-    print("API RESPONSE:")
-    pprint(response)
-    print("-"*150)
+    # print("-"*150)
+    # print("API RESPONSE:")
+    # pprint(response)
+    # print("-"*150)
 
 
     return response
@@ -102,7 +127,7 @@ def get_clan_members(roster = 1):
     payload = ""
 
     response = requests.request("GET", url, headers=headers, data=payload).json()
-    pprint(response)
+    # pprint(response)
     
    
     clan_members = []
@@ -129,6 +154,8 @@ def get_clan_members(roster = 1):
         json.dump(clan_members, f, ensure_ascii=False, indent=4)
 
     return clan_members
+
+
 
 
 if __name__ == "__main__":
